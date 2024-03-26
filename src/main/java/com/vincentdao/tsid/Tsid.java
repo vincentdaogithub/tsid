@@ -4,6 +4,35 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
+/**
+ * TSID ({@link Tsid} in this context, stands for Time-Sorted ID) is a special type of ID that looks like UUID,
+ * but is actually sortable and incremental. This ensures the usage of indexing in database, while preserving the
+ * uniqueness of UUID (or mostly the look of it).
+ * <p>
+ * TSID is basically a signed 64-bit integer ({@code long} in Java). Its structure is heavily inspired from these
+ * sources:
+ * <ul>
+ * <li> Vlad Mihalcea's posts on <a href="https://vladmihalcea.com/tsid-identifier-jpa-hibernate/">TSID</a> and
+ *      <a href="https://vladmihalcea.com/uuid-database-primary-key/">why using it at all</a>.
+ * <li> <a href="https://en.wikipedia.org/wiki/Snowflake_ID">Snowflake ID</a> from X (formerly Twitter).
+ * </ul>
+ * <p>
+ * The current implementation of TSID consists of three parts:
+ * <ul>
+ * <li> The first 42 bits represent the timestamp of the creation of the TSID. Specifically, it comprises a 1-bit
+ *      signed value and a 41-bit timestamp. The timestamp is calculated by getting the current UTC in milliseconds
+ *      since Unix epoch and subtract the custom epoch value (if defined).
+ * <li> The next 10 bits represent the node ID for the current machine/node/worker. This allocation is particularly
+ *      useful in systems where multiple instances of applications are deployed, and each utilizes the
+ *      {@link TsidFactory} for generating the Tsid.
+ * <li> Finally, the last 12 bits represent an incremental sequence number for multiple TSIDs generated within the
+ *      same millisecond (timestamp), if such occurrences arise. The starting sequence for each timestamp is securely
+ *      randomized to minimize the predictability of the TSID.
+ * </ul>
+ * <p>
+ * The String representation of TSID is based on
+ * <a href="https://www.crockford.com/base32.html">Crockford's Base32</a>.
+ */
 public final class Tsid {
 
     /**
@@ -26,10 +55,6 @@ public final class Tsid {
      */
     static final int MAX_TSID_STRING_LENGTH = 13;
 
-    /**
-     * <a href="https://en.wikipedia.org/wiki/Base32#Crockford's_Base32">Crockford's Base32</a> character mappings. See
-     * the <a href="https://www.crockford.com/base32.html">author's page</a> for more details.
-     */
     private static final Map<Byte, Character> crockfordEncodeMapping;
 
     static {
@@ -194,16 +219,16 @@ public final class Tsid {
         char[] chars = crockfordTsid.toCharArray();
         long result = 0;
         for (int i = 1; i < MAX_TSID_STRING_LENGTH; i++) {
-            Byte charValue = crockfordDecodeMapping.get(chars[i - 1]);
-            if (Objects.isNull(charValue)) {
+            if (!crockfordDecodeMapping.containsKey(chars[i - 1])) {
                 throw new IllegalArgumentException("Invalid Crockford character.");
             }
+            byte charValue = crockfordDecodeMapping.get(chars[i - 1]);
             result |= (((long) charValue) << (64 - (5 * i)));
         }
-        Byte charValue = crockfordDecodeMapping.get(chars[MAX_TSID_STRING_LENGTH - 1]);
-        if (Objects.isNull(charValue)) {
+        if (!crockfordDecodeMapping.containsKey(chars[MAX_TSID_STRING_LENGTH - 1])) {
             throw new IllegalArgumentException("Invalid Crockford character.");
         }
+        byte charValue = crockfordDecodeMapping.get(chars[MAX_TSID_STRING_LENGTH - 1]);
         result |= charValue;
         return result;
     }
@@ -226,20 +251,16 @@ public final class Tsid {
         }
         // We shift to the right 60 times because there's only 4 bits left.
         byte charValue = (byte) (idAsLong >>> 60);
-        Character crockfordChar = getCrockfordChar(charValue);
-        if (Objects.isNull(crockfordChar)) {
-            throw new IllegalArgumentException("Invalid Crockford value.");
-        }
+        char crockfordChar = getCrockfordChar(charValue);
         builder.append(crockfordChar);
         return builder.toString();
     }
 
-    private Character getCrockfordChar(byte value) {
+    private char getCrockfordChar(byte value) {
         if (crockfordEncodeMapping.containsKey(value)) {
             return crockfordEncodeMapping.get(value);
-        } else {
-            throw new IllegalArgumentException("The value is not 32-bit integer.");
         }
+        throw new IllegalArgumentException("Invalid Crockford value. Must be 32-bit integer.");
     }
 
     @Override

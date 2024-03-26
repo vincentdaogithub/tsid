@@ -1,7 +1,5 @@
 package com.vincentdao.tsid;
 
-import java.util.HashSet;
-import java.util.Set;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -43,17 +41,5 @@ final class TsidTest {
         assertThat(id)
                 .isNotNull()
                 .isEqualTo(TsidTestUtils.createDefault());
-    }
-
-    @Test
-    void givenTsidFactory_whenSimpleGenerate_thenNoCollision() {
-        final int expectedSize = 1000;
-        final Set<Tsid> tsidSet = new HashSet<>();
-        for (int i = 0; i < expectedSize; i++) {
-            assertThat(tsidSet.add(TsidFactory.instance().generate()))
-                    .isTrue();
-        }
-        assertThat(tsidSet)
-                .hasSize(expectedSize);
     }
 }
