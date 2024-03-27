@@ -28,6 +28,8 @@ The current implementation of TSID consists of three parts:
   millisecond (timestamp), if such occurrences arise. The starting sequence for each timestamp is securely randomized to
   minimize the predictability of the TSID.
 
+The generation of Tsid per node is guaranteed to be thread-safe.
+
 ## Usage
 
 To generate an instance of `Tsid`, we use `TsidFactory`:
