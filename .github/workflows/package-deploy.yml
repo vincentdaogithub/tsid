@@ -1,0 +1,24 @@
+name: Deploy to GitHub Packages
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up JDK
+        uses: actions/setup-java@v2
+        with:
+          java-version: '11'
+          distribution: 'temurin'
+
+      - name: Build and deploy
+        run: mvn deploy
+        env:
+          GITHUB_TOKEN: ${{ secrets.DEPLOY_TOKEN }}
