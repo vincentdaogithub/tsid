@@ -29,5 +29,13 @@
             <version>3.25.3</version>
             <scope>test</scope>
         </dependency>
+
+        <!-- https://mvnrepository.com/artifact/org.junit-pioneer/junit-pioneer -->
+        <dependency>
+            <groupId>org.junit-pioneer</groupId>
+            <artifactId>junit-pioneer</artifactId>
+            <version>1.9.1</version>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 </project>

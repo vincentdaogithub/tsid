@@ -49,6 +49,13 @@ public final class TsidFactory {
         }
     }
 
+    /**
+     * Resets the factory instance.
+     */
+    public static synchronized void reset() {
+        instance = null;
+    }
+
     private final long node;
     private final long epoch;
 
@@ -101,12 +108,20 @@ public final class TsidFactory {
         return (Instant.now().toEpochMilli() - epoch);
     }
 
+    public long getNode() {
+        return node;
+    }
+
+    public long getEpoch() {
+        return epoch;
+    }
+
     public static class Builder {
 
-        private static final String NODE_PROP_NAME = "tsid.node";
-        private static final String NODE_ENV_NAME = "TSID_NODE";
-        private static final String EPOCH_PROP_NAME = "tsid.epoch";
-        private static final String EPOCH_ENV_NAME = "TSID_EPOCH";
+        static final String NODE_PROP_NAME = "tsid.node";
+        static final String NODE_ENV_NAME = "TSID_NODE";
+        static final String EPOCH_PROP_NAME = "tsid.epoch";
+        static final String EPOCH_ENV_NAME = "TSID_EPOCH";
 
         long epoch;
         long node;
@@ -124,13 +139,13 @@ public final class TsidFactory {
 
             public Builder comesFromSystemOrDefault() {
                 // Get the node value from the system properties
-                Long nodeAsProperty = Builder.extractFromSystemAsLong(NODE_PROP_NAME);
+                Long nodeAsProperty = Builder.convertStringToLong(System.getProperty(NODE_PROP_NAME));
                 if (Objects.nonNull(nodeAsProperty)) {
                     builder.node = nodeAsProperty;
                     return builder;
                 }
                 // Get the node value from the system environment
-                Long nodeAsEnv = Builder.extractFromSystemAsLong(NODE_ENV_NAME);
+                Long nodeAsEnv = Builder.convertStringToLong(System.getenv(NODE_ENV_NAME));
                 if (Objects.nonNull(nodeAsEnv)) {
                     builder.node = nodeAsEnv;
                     return builder;
@@ -165,13 +180,13 @@ public final class TsidFactory {
 
             public Builder comesFromSystemOrDefault() {
                 // Get the epoch value from the system properties
-                Long epochAsProperty = Builder.extractFromSystemAsLong(EPOCH_PROP_NAME);
+                Long epochAsProperty = convertStringToLong(System.getProperty(EPOCH_PROP_NAME));
                 if (Objects.nonNull(epochAsProperty)) {
                     builder.epoch = epochAsProperty;
                     return builder;
                 }
                 // Get the epoch value from the system environment
-                Long epochAsEnv = Builder.extractFromSystemAsLong(EPOCH_ENV_NAME);
+                Long epochAsEnv = convertStringToLong(System.getenv(EPOCH_ENV_NAME));
                 if (Objects.nonNull(epochAsEnv)) {
                     builder.epoch = epochAsEnv;
                     return builder;
@@ -196,13 +211,11 @@ public final class TsidFactory {
             return new EpochBuilder(this);
         }
 
-        private static Long extractFromSystemAsLong(String varName) {
-            String value = System.getProperty(varName);
-            if (Objects.nonNull(value)) {
-                String trimmed = value.trim();
-                return Long.parseLong(trimmed);
+        private static Long convertStringToLong(String value) {
+            if (Objects.isNull(value) || value.trim().isEmpty()) {
+                return null;
             }
-            return null;
+            return Long.parseLong(value);
         }
 
         public TsidFactory build() {
@@ -221,12 +234,5 @@ public final class TsidFactory {
             throw new IllegalStateException(
                     "Race condition encountered. Consider generate the factory safely first.");
         }
-    }
-
-    /**
-     * Resets the factory instance.
-     */
-    public synchronized void reset() {
-        instance = null;
     }
 }
