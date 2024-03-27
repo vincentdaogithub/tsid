@@ -21,6 +21,8 @@ final class TsidTest {
                 .isEqualTo(TsidTestUtils.TSID_DEFAULT_STRING);
         assertThat(id.getTimestamp())
                 .isEqualTo(TsidTestUtils.TSID_DEFAULT_TIMESTAMP);
+        assertThat(id.asLowercaseString())
+                .isEqualTo(TsidTestUtils.TSID_DEFAULT_STRING.toLowerCase());
     }
 
     @Test

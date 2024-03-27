@@ -160,8 +160,8 @@ final class TsidFactoryTest {
 
     @Test
     @SetEnvironmentVariable.SetEnvironmentVariables({
-            @SetEnvironmentVariable(key = TsidFactory.Builder.NODE_ENV_NAME, value = "69"),
-            @SetEnvironmentVariable(key = TsidFactory.Builder.EPOCH_ENV_NAME, value = "1000000")
+            @SetEnvironmentVariable(key = TsidFactory.NODE_ENV_NAME, value = "69"),
+            @SetEnvironmentVariable(key = TsidFactory.EPOCH_ENV_NAME, value = "1000000")
     })
     void givenTsidFactory_whenComesFromSystemEnvironment_thenSuccessful() {
         TsidFactory.reset();
@@ -179,8 +179,8 @@ final class TsidFactoryTest {
 
     @Test
     @SetSystemProperty.SetSystemProperties({
-            @SetSystemProperty(key = TsidFactory.Builder.NODE_PROP_NAME, value = "96"),
-            @SetSystemProperty(key = TsidFactory.Builder.EPOCH_PROP_NAME, value = "10000000")
+            @SetSystemProperty(key = TsidFactory.NODE_PROP_NAME, value = "96"),
+            @SetSystemProperty(key = TsidFactory.EPOCH_PROP_NAME, value = "10000000")
     })
     void givenTsidFactory_whenComesFromSystemProperty_thenSuccessful() {
         TsidFactory.reset();
@@ -198,12 +198,12 @@ final class TsidFactoryTest {
 
     @Test
     @ClearEnvironmentVariable.ClearEnvironmentVariables({
-            @ClearEnvironmentVariable(key = TsidFactory.Builder.NODE_ENV_NAME),
-            @ClearEnvironmentVariable(key = TsidFactory.Builder.EPOCH_ENV_NAME)
+            @ClearEnvironmentVariable(key = TsidFactory.NODE_ENV_NAME),
+            @ClearEnvironmentVariable(key = TsidFactory.EPOCH_ENV_NAME)
     })
     @ClearSystemProperty.ClearSystemProperties({
-            @ClearSystemProperty(key = TsidFactory.Builder.NODE_PROP_NAME),
-            @ClearSystemProperty(key = TsidFactory.Builder.EPOCH_PROP_NAME)
+            @ClearSystemProperty(key = TsidFactory.NODE_PROP_NAME),
+            @ClearSystemProperty(key = TsidFactory.EPOCH_PROP_NAME)
     })
     void givenTsidFactory_whenComesFromSystemButNotDefined_thenUseDefault() {
         TsidFactory.reset();

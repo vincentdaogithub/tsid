@@ -23,6 +23,11 @@ import java.util.Objects;
  */
 public final class TsidFactory {
 
+    static final String NODE_PROP_NAME = "tsid.node";
+    static final String NODE_ENV_NAME = "TSID_NODE";
+    static final String EPOCH_PROP_NAME = "tsid.epoch";
+    static final String EPOCH_ENV_NAME = "TSID_EPOCH";
+
     private static final SecureRandom RANDOMIZER = new SecureRandom();
 
     private static TsidFactory instance;
@@ -117,11 +122,6 @@ public final class TsidFactory {
     }
 
     public static class Builder {
-
-        static final String NODE_PROP_NAME = "tsid.node";
-        static final String NODE_ENV_NAME = "TSID_NODE";
-        static final String EPOCH_PROP_NAME = "tsid.epoch";
-        static final String EPOCH_ENV_NAME = "TSID_EPOCH";
 
         long epoch;
         long node;

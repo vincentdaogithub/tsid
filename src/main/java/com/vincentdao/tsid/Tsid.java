@@ -263,6 +263,10 @@ public final class Tsid {
         throw new IllegalArgumentException("Invalid Crockford value. Must be 32-bit integer.");
     }
 
+    public String asLowercaseString() {
+        return asString().toLowerCase();
+    }
+
     @Override
     public String toString() {
         return asString();

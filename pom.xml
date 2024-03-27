@@ -4,10 +4,12 @@
 
     <groupId>com.vincentdao</groupId>
     <artifactId>tsid</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>0.1.0</version>
     <packaging>jar</packaging>
 
     <name>tsid</name>
+    <description>TSID (Time-Sorted ID) implementation based on Snowflake ID.</description>
+    <url>https://github.com/vincentdaogithub/tsid</url>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
