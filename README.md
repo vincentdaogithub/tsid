@@ -75,6 +75,20 @@ public static void main(String[] args) {
 }
 ```
 
+## Using `Tsid` in database
+
+Since `Tsid` values are essentially 64-bit integers (i.e., `long`), we store them as such in the database. However, each
+database vendor has its own syntax for representing 64-bit integers. Below are the syntaxes for the `long` type used by
+some well-known database vendors:
+
+- MySQL, MariaDB, SQL Server, IBM DB2: `BIGINT`
+- SQLite: `INTEGER` (Note: SQLite uses dynamic typing, but `INTEGER` can store up to 64-bit values.)
+- Oracle: `NUMBER` (It's worth noting that Oracle's `NUMBER` type is capable of representing a wide range of values, so
+  specifying precision and scale might be necessary depending on the use case.)
+
+On the application level, we can retrieve the `Tsid` from the stored `long` value and present it back to the users in
+whatever format is most suitable.
+
 ## Configure the factory
 
 There are currently two configurations for the factory:
@@ -111,12 +125,20 @@ import com.vincentdao.tsid.Tsid;
 import com.vincentdao.tsid.TsidFactory;
 
 public static void main(String[] args) {
-  // Example for Tsid with value "1541815603606036480"
-  Tsid id = TsidFactory.instance().generate();
+    // Example for Tsid with value "1541815603606036480"
+    Tsid id = TsidFactory.instance().generate();
 
-  System.out.println(id.asLong());                  // 1541815603606036480
-  System.out.println(id.asString());                // "2NJT27V22YG00"
-  System.out.println(id);                           // "2NJT27V22YG00"
-  System.out.println(id.asLowercaseString());       // "2njt27v22yg00"
+    System.out.println(id.asLong());                  // 1541815603606036480
+    System.out.println(id.asString());                // "2NJT27V22YG00"
+    System.out.println(id);                           // "2NJT27V22YG00"
+    System.out.println(id.asLowercaseString());       // "2njt27v22yg00"
 }
 ```
+
+## References
+
+- [The best way to generate a TSID entity identifier with JPA and Hibernate](https://vladmihalcea.com/tsid-identifier-jpa-hibernate/)
+- [The best UUID type for a database Primary Key](https://vladmihalcea.com/uuid-database-primary-key)
+- [Snowflake ID from X (formerly Twitter)](https://en.wikipedia.org/wiki/Snowflake_ID)
+- [Discord's Snowflake implementation](https://discord.com/developers/docs/reference#snowflakes)
+- [Series of UUID-like implementations by f4b6a3.](https://github.com/f4b6a3) Great resources!
