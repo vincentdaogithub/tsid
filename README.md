@@ -135,6 +135,10 @@ public static void main(String[] args) {
 }
 ```
 
+## License
+
+This project is licensed under [MIT License](LICENSE).
+
 ## References
 
 - [The best way to generate a TSID entity identifier with JPA and Hibernate](https://vladmihalcea.com/tsid-identifier-jpa-hibernate/)
