@@ -1,5 +1,6 @@
 package com.vincentdao.tsid;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -33,7 +34,9 @@ import java.util.Objects;
  * The String representation of TSID is based on
  * <a href="https://www.crockford.com/base32.html">Crockford's Base32</a>.
  */
-public final class Tsid {
+public final class Tsid implements Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     /**
      * Equivalent to 2^41 timestamps possible, starting from 0.
