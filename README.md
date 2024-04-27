@@ -4,9 +4,7 @@ Implementation of TSID based on Snowflake ID.
 
 ## Important notice
 
-This project/repository will be archived and migrated to another project. The link to the new project will be given shortly.
-
-The newer project will
+This project/repository will be archived and migrated to [another project](https://github.com/x4ala1c/tsid).
 
 ## What is TSID?
 
